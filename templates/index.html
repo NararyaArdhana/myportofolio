@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Nararya - Portfolio</title>
+    <title>{{ name }} - Portofolio</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,11 +21,12 @@
 
     <header class="site-header">
         <div class="container">
-            <a href="#profile" class="brand">Nararya</a>
+            <a href="{% url 'main:show_main' %}" class="brand">{{ name }}</a>
 
             <nav>
-                <a href="#profile">Profile</a>
+                <a href="{% url 'main:show_main' %}">Profile</a>
                 <a href="#education">Education</a>
+                <a href="{% url 'main:show_experience' %}">Experience</a>
             </nav>
         </div>
     </header>
@@ -41,11 +42,7 @@
                         Computer Science &middot; Universitas Indonesia
                     </p>
 
-                    <h1>
-                        MUHAMMAD<br>
-                        NARARYA<br>
-                        ARDHANA
-                    </h1>
+                    <h1>{{ name }}</h1>
                 </div>
 
 
@@ -55,30 +52,26 @@
                     <img
                         class="avatar"
                         src="/static/img/nara(3).JPG"
-                        alt="Photo of Muhammad Nararya Ardhana"
+                        alt="Photo of {{ name }}"
                     >
                 </div>
 
 
                 <div class="hero-details">
                     <p class="bio">
-                        Computer science student with a strong interest in
-                        technology and business development. Skilled in teamwork,
-                        time management, and problem-solving. Passionate about
-                        continuous learning and contributing to innovative
-                        technology solutions.
+                        {{ bio }}
                     </p>
 
                     <dl class="meta-list">
 
                         <div class="meta-row">
                             <dt>NPM</dt>
-                            <dd>2506657094</dd>
+                            <dd>{{ npm }}</dd>
                         </div>
 
                         <div class="meta-row">
                             <dt>Program</dt>
-                            <dd>S1 Ilmu Komputer</dd>
+                            <dd>{{ study_program }}</dd>
                         </div>
 
                     </dl>
@@ -128,7 +121,7 @@
 
                         <h3>SD Islam Al-Azhar BSD</h3>
 
-                        <p>Sekolah Dasar</p>
+                        <p>Elementary School</p>
                     </div>
 
 
@@ -137,7 +130,7 @@
 
                         <h3>SMP Islam Al-Azhar BSD</h3>
 
-                        <p>Sekolah Menengah Pertama</p>
+                        <p>Junior High School</p>
                     </div>
 
 
@@ -146,7 +139,7 @@
 
                         <h3>SMA Labschool Kebayoran</h3>
 
-                        <p>Sekolah Menengah Atas</p>
+                        <p>Senior High School</p>
                     </div>
 
 
@@ -155,15 +148,15 @@
 
                         <h3>Institut Teknologi Sepuluh Nopember</h3>
 
-                        <p>S1 Sistem Informasi</p>
+                        <p>Bachelor of Information Systems</p>
                     </div>
 
                     <div class="education-card">
-                        <span class="education-year">2025 - Sekarang</span>
+                        <span class="education-year">2025 - Present </span>
 
                         <h3>Universitas Indonesia</h3>
 
-                        <p>S1 Ilmu Komputer</p>
+                        <p>Bachelor of Computer Science</p>
                     </div>
 
                 </div>
@@ -176,7 +169,7 @@
     <footer class="site-footer">
         <div class="container">
             <p>
-                &copy; 2026 Nararya.
+                &copy; 2026 {{ name }}.
                 Fakultas Ilmu Komputer, Universitas Indonesia.
             </p>
         </div>
