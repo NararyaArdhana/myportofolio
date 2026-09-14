@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
-from main.models import Experience
+from main.models import Experience, Education
 
 
 class MainTest(TestCase):
@@ -64,5 +64,45 @@ class MainTest(TestCase):
         response = self.client.get(reverse("main:show_experience"))
 
         self.assertFalse(self.experience.is_ongoing)
-        self.assertContains(response, "Selesai")
-        self.assertNotContains(response, "Sedang berlangsung")
+        self.assertContains(response, "completed")
+        self.assertNotContains(response, "Ongoing")
+
+class EducationTest(TestCase):
+        def setUp(self):
+            self.education = Education.objects.create(
+                institution="Universitas Indonesia",
+                degree="Bachelor of Computer Science",
+                start_year=2025,
+            )
+
+        def test_education_model(self):
+            self.assertEqual(str(self.education), "Universitas Indonesia")
+            self.assertEqual(
+                self.education.degree,
+                "Bachelor of Computer Science"
+            )
+            self.assertEqual(self.education.start_year, 2025)
+            self.assertIsNone(self.education.end_year)
+
+        def test_education_page(self):
+            response = self.client.get(
+                reverse("main:show_education")
+            )
+
+            self.assertEqual(response.status_code, 200)
+            self.assertTemplateUsed(response, "education.html")
+            self.assertContains(response, "Universitas Indonesia")
+            self.assertContains(response, "Bachelor of Computer Science")
+            self.assertContains(response, "Present")
+
+        def test_empty_education_page(self):
+            Education.objects.all().delete()
+
+            response = self.client.get(
+                reverse("main:show_education")
+            )
+
+            self.assertContains(
+                response,
+                "No education history available."
+            )
