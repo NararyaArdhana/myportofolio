@@ -106,3 +106,26 @@ class EducationTest(TestCase):
                 response,
                 "No education history available."
             )
+
+        def test_update_education(self):
+            response = self.client.post(
+                reverse(
+                    "main:update_education",
+                    args=[self.education.id],
+                ),
+                {
+                    "institution": "Universitas Indonesia",
+                    "degree": "Computer Science",
+                    "start_year": 2025,
+                    "end_year": "",
+                },
+            )
+
+            self.assertRedirects(response, reverse("main:show_education"))
+
+            self.education.refresh_from_db()
+
+            self.assertEqual(self.education.institution, "Universitas Indonesia")
+            self.assertEqual(self.education.degree, "Computer Science")
+            self.assertEqual(self.education.start_year, 2025)
+            self.assertIsNone(self.education.end_year)

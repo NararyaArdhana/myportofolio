@@ -63,6 +63,22 @@ def add_education(request):
 
     return render(request, "add_education.html", context)
 
+def update_education(request, education_id):
+    education = get_object_or_404(Education, pk=education_id)
+    form = EducationForm(request.POST or None, instance=education)
+
+    if form.is_valid():
+        form.save()
+        return redirect("main:show_education")
+
+    context = {
+        "name": "Muhammad Nararya Ardhana",
+        "form": form,
+        "education": education,
+    }
+
+    return render(request, "update_education.html", context)
+
 def get_education_json(request):
     institution_query = request.GET.get("institution", "").strip()
     education = Education.objects.all()
