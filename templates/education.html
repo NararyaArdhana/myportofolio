@@ -11,16 +11,21 @@
         <p class="section-kicker">My Academic Journey</p>
         <h1>Education</h1>
 
-        <a href="{% url 'main:add_education' %}">Add Education</a>
-        <form method="GET">
-            <input
-                type="text"
-                name="institution"
-                placeholder="Search institution..."
-                value="{{ institution_query }}"
-            >
-            <button type="submit">Search</button>
-        </form>
+        <div class="education-actions">
+            <a href="{% url 'main:add_education' %}" class="btn btn-add">
+                + Add Education
+            </a>
+
+            <form method="GET" class="education-search">
+                <input
+                    type="text"
+                    name="institution"
+                    placeholder="Search institution..."
+                    value="{{ institution_query }}"
+                >
+                <button type="submit">Search</button>
+            </form>
+        </div>
 
         <div class="education-grid">
             {% for education in education_list %}
@@ -37,13 +42,13 @@
                     <h3>{{ education.institution }}</h3>
                     <p>{{ education.degree }}</p>
 
-                    <a href="{% url 'main:update_education' education.id %}">
+                   <a href="{% url 'main:update_education' education.id %}" class="btn btn-update">
                         Update
                     </a>
 
-                    <form method="POST" action="{% url 'main:delete_education' education.id %}">
+                    <form method="POST" action="{% url 'main:delete_education' education.id %}" class="delete-form">
                         {% csrf_token %}
-                        <button type="submit">Delete</button>
+                        <button type="submit" class="btn btn-delete">Delete</button>
                     </form>
 
                 </div>
