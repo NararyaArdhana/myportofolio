@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block meta %}
+<title>Update Experience - {{ name }}</title>
+{% endblock meta %}
+
+{% block content %}
+
+<section class="experience">
+    <div class="container">
+        <p class="section-kicker">Update Experience</p>
+        <h1>Update Experience</h1>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <button type="submit">Update Experience</button>
+        </form>
+    </div>
+</section>
+
+{% endblock content %}

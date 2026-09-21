@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect,get_object_or_404
 from main.models import Experience, Education
-from main.forms import EducationForm
+from main.forms import EducationForm, ExperienceForm
 from django.core import serializers
 from django.http import HttpResponse
 
@@ -63,6 +63,20 @@ def add_education(request):
 
     return render(request, "add_education.html", context)
 
+def add_experience(request):
+    form = ExperienceForm(request.POST or None)
+
+    if form.is_valid():
+        form.save()
+        return redirect("main:show_experience")
+
+    context = {
+        "name": "Muhammad Nararya Ardhana",
+        "form": form,
+    }
+
+    return render(request, "add_experience.html", context)
+
 def update_education(request, education_id):
     education = get_object_or_404(Education, pk=education_id)
     form = EducationForm(request.POST or None, instance=education)
@@ -78,6 +92,22 @@ def update_education(request, education_id):
     }
 
     return render(request, "update_education.html", context)
+
+def update_experience(request, experience_id):
+    experience = get_object_or_404(Experience, pk=experience_id)
+    form = ExperienceForm(request.POST or None, instance=experience)
+
+    if form.is_valid():
+        form.save()
+        return redirect("main:show_experience")
+
+    context = {
+        "name": "Muhammad Nararya Ardhana",
+        "form": form,
+        "experience": experience,
+    }
+
+    return render(request, "update_experience.html", context)
 
 def get_education_json(request):
     institution_query = request.GET.get("institution", "").strip()
@@ -103,3 +133,12 @@ def delete_education(request, education_id):
         return redirect("main:show_education")
 
     return redirect("main:show_education")
+
+def delete_experience(request, experience_id):
+    experience = get_object_or_404(Experience, pk=experience_id)
+
+    if request.method == "POST":
+        experience.delete()
+        return redirect("main:show_experience")
+
+    return redirect("main:show_experience")
