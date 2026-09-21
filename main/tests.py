@@ -67,6 +67,22 @@ class MainTest(TestCase):
         self.assertContains(response, "completed")
         self.assertNotContains(response, "Ongoing")
 
+    def test_experience_json(self):
+        response = self.client.get(
+            reverse("main:get_experience_json")
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response["Content-Type"],
+            "application/json",
+        )
+
+        self.assertContains(
+            response,
+            "main.experience",
+        )
+
 class EducationTest(TestCase):
         def setUp(self):
             self.education = Education.objects.create(

@@ -42,9 +42,18 @@ def show_education(request):
 
 
 def show_experience(request):
+    json_response = get_experience_json(request)
+
+    experience = serializers.deserialize(
+        "json",
+        json_response.content.decode("utf-8"),
+    )
+
+    experience = [item.object for item in experience]
+
     context = {
         "name": "Muhammad Nararya Ardhana",
-        "experience_list": Experience.objects.all(),
+        "experience_list": experience,
     }
 
     return render(request, "experience.html", context)
@@ -122,6 +131,26 @@ def get_education_json(request):
 
     return HttpResponse(
         education_json,
+        content_type="application/json"
+    )
+
+def get_experience_json(request):
+    title_query = request.GET.get("title", "").strip()
+
+    experiences = Experience.objects.all()
+
+    if title_query:
+        experiences = experiences.filter(
+            title__icontains=title_query
+        )
+
+    experiences_json = serializers.serialize(
+        "json",
+        experiences
+    )
+
+    return HttpResponse(
+        experiences_json,
         content_type="application/json"
     )
 
