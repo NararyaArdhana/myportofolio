@@ -12,9 +12,11 @@
         <h1>Education</h1>
 
         <div class="education-actions">
-            <a href="{% url 'main:add_education' %}" class="btn btn-add">
-                + Add Education
-            </a>
+            {% if user.is_superuser %}
+                <a href="{% url 'main:add_education' %}" class="btn btn-add">
+                    + Add Education
+                </a>
+            {% endif %}
 
             <form method="GET" class="education-search">
                 <input
@@ -42,14 +44,18 @@
                     <h3>{{ education.institution }}</h3>
                     <p>{{ education.degree }}</p>
 
-                   <a href="{% url 'main:update_education' education.id %}" class="btn btn-update">
-                        Update
-                    </a>
+                    {% if user.is_superuser %}
+                        <a href="{% url 'main:update_education' education.id %}" class="btn btn-update">
+                            Update
+                        </a>
 
-                    <form method="POST" action="{% url 'main:delete_education' education.id %}" class="delete-form">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-delete">Delete</button>
-                    </form>
+                        <form method="POST" action="{% url 'main:delete_education' education.id %}" class="delete-form">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-delete">
+                                Delete
+                            </button>
+                        </form>
+                    {% endif %}
 
                 </div>
             {% empty %}
@@ -59,4 +65,4 @@
     </div>
 </section>
 
-{% endblock content %}
+{% endblock content %}py manage.py test

@@ -11,9 +11,11 @@
         <p class="section-kicker">My Journey So Far</p>
         <h1>Experience</h1>
 
-        <a href="{% url 'main:add_experience' %}" class="btn btn-add">
-            + Add Experience
-        </a>
+        {% if user.is_superuser %}
+            <a href="{% url 'main:add_experience' %}" class="btn btn-add">
+                + Add Experience
+            </a>
+        {% endif %}
 
         <div class="experience-grid">
             {% for experience in experience_list %}
@@ -33,14 +35,19 @@
                             completed
                         {% endif %}
                     </span>
-                    <a href="{% url 'main:update_experience' experience.id %}" class="btn btn-update">
-                        Update
-                    </a>
 
-                    <form method="POST" action="{% url 'main:delete_experience' experience.id %}" class="delete-form">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-delete">Delete</button>
-                    </form>
+                    {% if user.is_superuser %}
+                        <a href="{% url 'main:update_experience' experience.id %}" class="btn btn-update">
+                            Update
+                        </a>
+
+                        <form method="POST" action="{% url 'main:delete_experience' experience.id %}" class="delete-form">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-delete">
+                                Delete
+                            </button>
+                        </form>
+                    {% endif %}
                 </div>
             {% empty %}
                 <p>Belum ada pengalaman yang ditambahkan.</p>

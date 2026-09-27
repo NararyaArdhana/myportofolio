@@ -103,8 +103,12 @@ else:
     }
 
 
+
+
 # Password validation
 # https://docs.djangoproject.com/en/6.1/ref/settings/#auth-password-validators
+
+LOGIN_URL = "/login/"
 
 AUTH_PASSWORD_VALIDATORS = [
     {

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block meta %}
+<title>Register - {{ name }}</title>
+{% endblock meta %}
+
+{% block content %}
+
+<section class="register">
+    <div class="container">
+        <p class="section-kicker">Create Account</p>
+        <h1>Register</h1>
+
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <button type="submit">Register</button>
+        </form>
+
+        <p>
+            Already have an account?
+            <a href="#">Login here</a>
+        </p>
+    </div>
+</section>
+
+{% endblock content %}

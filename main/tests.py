@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from main.models import Experience, Education
+from django.contrib.auth.models import User
 
 
 class MainTest(TestCase):
@@ -84,64 +85,85 @@ class MainTest(TestCase):
         )
 
 class EducationTest(TestCase):
-        def setUp(self):
-            self.education = Education.objects.create(
-                institution="Universitas Indonesia",
-                degree="Bachelor of Computer Science",
-                start_year=2025,
-            )
+    def setUp(self):
+        self.superuser = User.objects.create_superuser(
+            username="admin",
+            password="admin12345",
+        )
 
-        def test_education_model(self):
-            self.assertEqual(str(self.education), "Universitas Indonesia")
-            self.assertEqual(
-                self.education.degree,
-                "Bachelor of Computer Science"
-            )
-            self.assertEqual(self.education.start_year, 2025)
-            self.assertIsNone(self.education.end_year)
+        self.education = Education.objects.create(
+            institution="Universitas Indonesia",
+            degree="Bachelor of Computer Science",
+            start_year=2025,
+        )
 
-        def test_education_page(self):
-            response = self.client.get(
-                reverse("main:show_education")
-            )
+    def test_education_model(self):
+        self.assertEqual(str(self.education), "Universitas Indonesia")
+        self.assertEqual(
+            self.education.degree,
+            "Bachelor of Computer Science"
+        )
+        self.assertEqual(self.education.start_year, 2025)
+        self.assertIsNone(self.education.end_year)
 
-            self.assertEqual(response.status_code, 200)
-            self.assertTemplateUsed(response, "education.html")
-            self.assertContains(response, "Universitas Indonesia")
-            self.assertContains(response, "Bachelor of Computer Science")
-            self.assertContains(response, "Present")
+    def test_education_page(self):
+        response = self.client.get(
+            reverse("main:show_education")
+        )
 
-        def test_empty_education_page(self):
-            Education.objects.all().delete()
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "education.html")
+        self.assertContains(response, "Universitas Indonesia")
+        self.assertContains(response, "Bachelor of Computer Science")
+        self.assertContains(response, "Present")
 
-            response = self.client.get(
-                reverse("main:show_education")
-            )
+    def test_empty_education_page(self):
+        Education.objects.all().delete()
 
-            self.assertContains(
-                response,
-                "No education history available."
-            )
+        response = self.client.get(
+            reverse("main:show_education")
+        )
 
-        def test_update_education(self):
-            response = self.client.post(
-                reverse(
-                    "main:update_education",
-                    args=[self.education.id],
-                ),
-                {
-                    "institution": "Universitas Indonesia",
-                    "degree": "Computer Science",
-                    "start_year": 2025,
-                    "end_year": "",
-                },
-            )
+        self.assertContains(
+            response,
+            "No education history available."
+        )
 
-            self.assertRedirects(response, reverse("main:show_education"))
+    def test_update_education(self):
+        self.client.force_login(self.superuser)
 
-            self.education.refresh_from_db()
+        response = self.client.post(
+            reverse(
+                "main:update_education",
+                args=[self.education.id],
+            ),
+            {
+                "institution": "Universitas Indonesia",
+                "degree": "Computer Science",
+                "start_year": 2025,
+                "end_year": "",
+            },
+        )
 
-            self.assertEqual(self.education.institution, "Universitas Indonesia")
-            self.assertEqual(self.education.degree, "Computer Science")
-            self.assertEqual(self.education.start_year, 2025)
-            self.assertIsNone(self.education.end_year)
+        self.assertRedirects(
+            response,
+            reverse("main:show_education")
+        )
+
+        self.education.refresh_from_db()
+
+        self.assertEqual(
+            self.education.institution,
+            "Universitas Indonesia"
+        )
+        self.assertEqual(
+            self.education.degree,
+            "Computer Science"
+        )
+        self.assertEqual(
+            self.education.start_year,
+            2025
+        )
+        self.assertIsNone(
+            self.education.end_year
+        )
