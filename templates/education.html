@@ -44,11 +44,13 @@
                     <h3>{{ education.institution }}</h3>
                     <p>{{ education.degree }}</p>
 
-                    {% if user.is_superuser %}
+                    {% if user.is_superuser or is_editor %}
                         <a href="{% url 'main:update_education' education.id %}" class="btn btn-update">
                             Update
                         </a>
+                    {% endif %}
 
+                    {% if user.is_superuser %}
                         <form method="POST" action="{% url 'main:delete_education' education.id %}" class="delete-form">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-delete">

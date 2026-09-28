@@ -9,6 +9,10 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 
 
+
+def is_editor(user):
+    return user.groups.filter(name="Editor").exists()
+
 def show_main(request):
 
     last_login = request.COOKIES.get(
@@ -93,6 +97,7 @@ def show_education(request):
         "name": "Muhammad Nararya Ardhana",
         "education_list": education,
         "institution_query": institution_query,
+        "is_editor": is_editor(request.user),
     }
 
     return render(request, "education.html", context)
@@ -111,6 +116,7 @@ def show_experience(request):
     context = {
         "name": "Muhammad Nararya Ardhana",
         "experience_list": experience,
+        "is_editor": is_editor(request.user),
     }
 
     return render(request, "experience.html", context)
@@ -154,7 +160,7 @@ def add_experience(request):
 @login_required(login_url="/login/")
 def update_education(request, education_id):
 
-    if not request.user.is_superuser:
+    if not request.user.is_superuser and not is_editor(request.user):
         raise PermissionDenied
     
     education = get_object_or_404(Education, pk=education_id)
@@ -174,7 +180,7 @@ def update_education(request, education_id):
 
 @login_required(login_url="/login/")
 def update_experience(request, experience_id):
-    if not request.user.is_superuser:
+    if not request.user.is_superuser and not is_editor(request.user):
         raise PermissionDenied
     
     experience = get_object_or_404(Experience, pk=experience_id)

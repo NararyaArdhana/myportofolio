@@ -36,11 +36,13 @@
                         {% endif %}
                     </span>
 
-                    {% if user.is_superuser %}
+                    {% if user.is_superuser or is_editor%}
                         <a href="{% url 'main:update_experience' experience.id %}" class="btn btn-update">
                             Update
                         </a>
+                    {% endif %}
 
+                    {% if user.is_superuser %}
                         <form method="POST" action="{% url 'main:delete_experience' experience.id %}" class="delete-form">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-delete">
