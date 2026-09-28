@@ -42,3 +42,17 @@ Bagian yang dibantu oleh AI:
 Strategi prompting yang digunakan:
 Saya memberikan konteks berupa struktur project, potongan kode, screenshot error, serta hasil pengujian kepada ChatGPT.Saya kemudian meminta bantuan secara bertahap untuk menemukan penyebab masalah dan menentukan perubahan kode yang diperlukan.
 
+### TUGAS 4
+### AI DISCLOSURE
+Dalam pengerjaan Tugas 4 saya menggunakan ChatGPT untuk membantu memahami, mengimplementasikan, dan melakukan debugging fitur authentication, authorization, dan star pada web.
+
+Bagian yang dibantu oleh AI:
+Membantu memahami dan mengimplementasikan fitur login, register, dan logout menggunakan Django Authentication.
+Membantu mengimplementasikan role dan authorization, termasuk membedakan hak akses antara visitor, user biasa, Editor, dan Superuser.
+Membantu mengimplementasikan fitur Star/Unstar pada data Experience menggunakan ManyToManyField, termasuk menghitung jumlah Star dan menampilkan status Star pengguna.
+Membantu melakukan debugging berdasarkan error yang muncul saat menjalankan aplikasi, termasuk pengecekan template, URL, view, model, dan CSS.
+Membantu memberikan saran untuk memperbaiki UI, seperti posisi tombol Star, tombol Add/Update/Delete, tampilan Login/Register, serta posisi Last Login pada footer.
+
+Strategi prompting yang digunakan:
+Saya memberikan konteks berupa struktur project, potongan kode, screenshot tampilan atau error, serta hasil pengujian kepada ChatGPT. Saya kemudian meminta bantuan secara bertahap untuk memahami penyebab masalah, menentukan perubahan kode yang diperlukan, dan melakukan pengujian kembali setelah perubahan dilakukan.
+

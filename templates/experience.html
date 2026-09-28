@@ -20,14 +20,43 @@
         <div class="experience-grid">
             {% for experience in experience_list %}
                 <div class="experience-card">
-                    <span class="experience-category">
-                        {{ experience.category|title }}
-                    </span>
 
+                    
+                    <div class="experience-card-top">
+                        <span class="experience-category">
+                            {{ experience.category|title }}
+                        </span>
+
+                        {% if user.is_authenticated %}
+                            <form method="POST"
+                                action="{% url 'main:toggle_star' experience.id %}"
+                                class="star-form">
+                                {% csrf_token %}
+
+                                <button
+                                    type="submit"
+                                    class="star-button {% if user in experience.starred_by.all %}starred{% endif %}"
+                                >
+                                    {% if user in experience.starred_by.all %}
+                                        ★ {{ experience.starred_by.count }}
+                                    {% else %}
+                                        ☆ {{ experience.starred_by.count }}
+                                    {% endif %}
+                                </button>
+                            </form>
+                        {% else %}
+                            <span class="star-count">
+                                ☆ {{ experience.starred_by.count }}
+                            </span>
+                        {% endif %}
+                    </div>
+
+                    
                     <h3>{{ experience.title }}</h3>
 
                     <p>{{ experience.description }}</p>
 
+                    
                     <span class="experience-status">
                         {% if experience.is_ongoing %}
                             Ongoing
@@ -36,41 +65,36 @@
                         {% endif %}
                     </span>
 
-                    <div class="star-section">
-                        <p>⭐ {{ experience.starred_by.count }} Stars</p>
-
-                        {% if user.is_authenticated %}
-                            <form method="POST" action="{% url 'main:toggle_star' experience.id %}">
-                                {% csrf_token %}
-
-                                {% if user in experience.starred_by.all %}
-                                    <button type="submit" class="btn">
-                                        Unstar
-                                    </button>
-                                {% else %}
-                                    <button type="submit" class="btn">
-                                        Star
-                                    </button>
-                                {% endif %}
-                            </form>
-                        {% endif %}
-                    </div>
-
+        
                     {% if user.is_superuser or is_editor %}
-                        <a href="{% url 'main:update_experience' experience.id %}" class="btn btn-update">
+                        <a
+                            href="{% url 'main:update_experience' experience.id %}"
+                            class="btn btn-update"
+                        >
                             Update
                         </a>
                     {% endif %}
 
+            
                     {% if user.is_superuser %}
-                        <form method="POST" action="{% url 'main:delete_experience' experience.id %}" class="delete-form">
+                        <form
+                            method="POST"
+                            action="{% url 'main:delete_experience' experience.id %}"
+                            class="delete-form"
+                        >
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-delete">
+
+                            <button
+                                type="submit"
+                                class="btn btn-delete"
+                            >
                                 Delete
                             </button>
                         </form>
                     {% endif %}
+
                 </div>
+
             {% empty %}
                 <p>Belum ada pengalaman yang ditambahkan.</p>
             {% endfor %}

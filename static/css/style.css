@@ -428,3 +428,225 @@ h1, .brand {
     display: inline;
     margin: 0;
 }
+
+
+.auth-section {
+    min-height: 70vh;
+    padding: 5rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 430px;
+    padding: 2.5rem;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    box-shadow: 8px 8px 0 var(--line);
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.auth-header h1 {
+    margin: 0.4rem 0 0;
+    font-size: 2.5rem;
+}
+
+.auth-subtitle {
+    margin-top: 0.75rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.auth-form p {
+    margin-bottom: 1.2rem;
+}
+
+.auth-form label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.auth-form input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.auth-form input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(157, 93, 57, 0.12);
+}
+
+.auth-form .helptext {
+    display: block;
+    margin-top: 0.4rem;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    line-height: 1.5;
+}
+
+.auth-form ul.errorlist {
+    margin: 0 0 0.5rem;
+    padding: 0;
+    list-style: none;
+    color: #c0392b;
+    font-size: 0.8rem;
+}
+
+.auth-button {
+    width: 100%;
+    margin-top: 0.5rem;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 10px;
+    background: var(--accent);
+    color: #fff;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.auth-button:hover {
+    background: var(--accent-dark);
+    transform: translateY(-2px);
+}
+
+.auth-footer {
+    margin-top: 1.5rem;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.auth-footer a {
+    color: var(--accent-dark);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+
+
+
+@media (max-width: 600px) {
+    .auth-section {
+        padding: 3rem 1rem;
+    }
+
+    .auth-card {
+        padding: 2rem 1.5rem;
+        box-shadow: 5px 5px 0 var(--line);
+    }
+
+    .auth-header h1 {
+        font-size: 2rem;
+    }
+
+}
+
+
+.experience-card .experience-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.experience-card .experience-card-top .experience-category {
+    margin: 0;
+}
+
+.experience-card .experience-card-top .star-form {
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+
+.experience-card .experience-card-top .star-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    padding: 5px 10px;
+    margin: 0;
+
+    border: 1px solid var(--line);
+    border-radius: 999px;
+
+    background: var(--paper);
+    color: var(--text-muted);
+
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.2;
+
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+
+    transition: all 0.2s ease;
+}
+
+.experience-card .experience-card-top .star-button:hover {
+    background: #f2e3d8;
+    border-color: var(--accent);
+    color: var(--accent-dark);
+    transform: translateY(-1px);
+}
+
+.experience-card .experience-card-top .star-button.starred {
+    background: #f2e3d8;
+    border-color: var(--accent);
+    color: var(--accent-dark);
+}
+
+.experience-card .experience-card-top .star-count {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 10px;
+    margin: 0;
+
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.site-footer {
+    position: relative;
+    padding: 1.5rem;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    border-top: 1px solid var(--line);
+}
+
+.last-login {
+    position: absolute;
+    right: 1.5rem;
+    bottom: 1.5rem;
+    margin: 0;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}

@@ -6,22 +6,33 @@
 
 {% block content %}
 
-<section class="register">
-    <div class="container">
-        <p class="section-kicker">Create Account</p>
-        <h1>Register</h1>
+<section class="auth-section">
+    <div class="auth-card">
 
-        <form method="POST">
+        <div class="auth-header">
+            <p class="section-kicker">Create Account</p>
+            <h1>Register</h1>
+            <p class="auth-subtitle">
+                Create an account to interact with the portfolio.
+            </p>
+        </div>
+
+        <form method="POST" class="auth-form">
             {% csrf_token %}
             {{ form.as_p }}
 
-            <button type="submit">Register</button>
+            <button type="submit" class="auth-button">
+                Create Account
+            </button>
         </form>
 
-        <p>
+        <p class="auth-footer">
             Already have an account?
-            <a href="#">Login here</a>
+            <a href="{% url 'main:login' %}">
+                Login here
+            </a>
         </p>
+
     </div>
 </section>
 
