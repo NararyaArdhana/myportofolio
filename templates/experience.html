@@ -36,7 +36,27 @@
                         {% endif %}
                     </span>
 
-                    {% if user.is_superuser or is_editor%}
+                    <div class="star-section">
+                        <p>⭐ {{ experience.starred_by.count }} Stars</p>
+
+                        {% if user.is_authenticated %}
+                            <form method="POST" action="{% url 'main:toggle_star' experience.id %}">
+                                {% csrf_token %}
+
+                                {% if user in experience.starred_by.all %}
+                                    <button type="submit" class="btn">
+                                        Unstar
+                                    </button>
+                                {% else %}
+                                    <button type="submit" class="btn">
+                                        Star
+                                    </button>
+                                {% endif %}
+                            </form>
+                        {% endif %}
+                    </div>
+
+                    {% if user.is_superuser or is_editor %}
                         <a href="{% url 'main:update_experience' experience.id %}" class="btn btn-update">
                             Update
                         </a>

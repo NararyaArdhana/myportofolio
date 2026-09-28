@@ -81,6 +81,18 @@ def logout_user(request):
 
     return response
 
+@login_required(login_url="/login/")
+def toggle_star(request, experience_id):
+    experience = get_object_or_404(Experience, pk=experience_id)
+
+    if request.method == "POST":
+        if request.user in experience.starred_by.all():
+            experience.starred_by.remove(request.user)
+        else:
+            experience.starred_by.add(request.user)
+
+    return redirect("main:show_experience")
+
 def show_education(request):
     json_response = get_education_json(request)
 
@@ -104,14 +116,7 @@ def show_education(request):
 
 
 def show_experience(request):
-    json_response = get_experience_json(request)
-
-    experience = serializers.deserialize(
-        "json",
-        json_response.content.decode("utf-8"),
-    )
-
-    experience = [item.object for item in experience]
+    experience = Experience.objects.all()
 
     context = {
         "name": "Muhammad Nararya Ardhana",
@@ -230,8 +235,12 @@ def get_experience_json(request):
     )
 
     return HttpResponse(
-        experiences_json,
-        content_type="application/json"
+        serializers.serialize(
+            "json",
+            experiences,
+            use_natural_foreign_keys=True,
+        ),
+        content_type="application/json",
     )
 
 @login_required(login_url="/login/")
