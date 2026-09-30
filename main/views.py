@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect,get_object_or_404
 from main.models import Experience, Education
 from main.forms import EducationForm, ExperienceForm, RegisterForm,AuthenticationForm
 from django.core import serializers
-from django.http import HttpResponse
+from django.http import HttpResponse,JsonResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
@@ -114,13 +114,12 @@ def show_education(request):
 
     return render(request, "education.html", context)
 
-
 def show_experience(request):
-    experience = Experience.objects.all()
+    title_query = request.GET.get("title", "").strip()
 
     context = {
         "name": "Muhammad Nararya Ardhana",
-        "experience_list": experience,
+        "title_query": title_query,
         "is_editor": is_editor(request.user),
     }
 
@@ -161,6 +160,48 @@ def add_experience(request):
     }
 
     return render(request, "add_experience.html", context)
+
+@login_required(login_url="/login/")
+def create_experience_ajax(request):
+    if not request.user.is_superuser:
+        return JsonResponse(
+            {"error": "You do not have permission to add experience."},
+            status=403
+        )
+
+    if request.method != "POST":
+        return JsonResponse(
+            {"error": "Only POST requests are allowed."},
+            status=405
+        )
+
+    form = ExperienceForm(request.POST)
+
+    if form.is_valid():
+        experience = form.save()
+
+        return JsonResponse({
+            "success": True,
+            "experience": {
+                "id": str(experience.id),
+                "title": experience.title,
+                "description": experience.description,
+                "category": experience.category,
+                "thumbnail": experience.thumbnail,
+                "started_at": experience.started_at,
+                "ended_at": experience.ended_at,
+                "star_count": 0,
+                "is_starred": False,
+            }
+        })
+
+    return JsonResponse(
+        {
+            "success": False,
+            "errors": form.errors,
+        },
+        status=400
+    )
 
 @login_required(login_url="/login/")
 def update_education(request, education_id):
@@ -229,19 +270,32 @@ def get_experience_json(request):
             title__icontains=title_query
         )
 
-    experiences_json = serializers.serialize(
-        "json",
-        experiences
-    )
+    data = []
 
-    return HttpResponse(
-        serializers.serialize(
-            "json",
-            experiences,
-            use_natural_foreign_keys=True,
-        ),
-        content_type="application/json",
-    )
+    for experience in experiences:
+        starred_users = experience.starred_by.all()
+
+        is_starred = (
+            request.user.is_authenticated
+            and request.user in starred_users
+        )
+
+        data.append({
+            "id": str(experience.id),
+            "title": experience.title,
+            "description": experience.description,
+            "category": experience.category,
+            "thumbnail": experience.thumbnail,
+            "started_at": experience.started_at,
+            "ended_at": experience.ended_at,
+            "star_count": starred_users.count(),
+            "is_starred": is_starred,
+            "starred_by_names": [
+                user.username for user in starred_users
+            ],
+        })
+
+    return JsonResponse(data, safe=False)
 
 @login_required(login_url="/login/")
 def delete_education(request, education_id):

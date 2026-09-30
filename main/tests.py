@@ -36,14 +36,27 @@ class MainTest(TestCase):
         self.assertTrue(self.experience.is_ongoing)
 
     def test_experience_page(self):
-        response = self.client.get(reverse("main:show_experience"))
+        response = self.client.get(
+            reverse("main:show_experience")
+        )
 
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "experience.html")
-        self.assertContains(response, self.experience.title)
-        self.assertContains(response, self.experience.description)
-        self.assertContains(response, "Freelance")
-        self.assertContains(response, "Ongoing")
+
+        self.assertTemplateUsed(
+            response,
+            "experience.html"
+        )
+
+        self.assertContains(
+            response,
+            "Experience"
+        )
+
+        self.assertContains(
+            response,
+            "experience-grid"
+        )
+
         self.assertContains(
             response,
             f'href="{reverse("main:show_main")}"'
@@ -66,7 +79,23 @@ class MainTest(TestCase):
 
         self.assertFalse(self.experience.is_ongoing)
         self.assertContains(response, "completed")
-        self.assertNotContains(response, "Ongoing")
+        response = self.client.get(
+            reverse("main:get_experience_json")
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+        data = response.json()
+
+        experience_data = next(
+            item
+            for item in data
+            if item["title"] == self.experience.title
+        )
+
+        self.assertIsNotNone(
+            experience_data["ended_at"]
+        )
 
     def test_experience_json(self):
         response = self.client.get(
@@ -79,9 +108,18 @@ class MainTest(TestCase):
             "application/json",
         )
 
-        self.assertContains(
-            response,
-            "main.experience",
+        data = response.json()
+
+        self.assertEqual(
+            response.status_code,
+            200
+        )
+
+        self.assertTrue(
+            any(
+                item["title"] == self.experience.title
+                for item in data
+            )
         )
 
 class EducationTest(TestCase):
