@@ -292,9 +292,7 @@ def get_experience_json(request):
             "ended_at": experience.ended_at,
             "star_count": starred_users.count(),
             "is_starred": is_starred,
-            "starred_by_names": [
-                user.username for user in starred_users
-            ],
+            
         })
 
     return JsonResponse(data, safe=False)
