@@ -705,11 +705,24 @@ if (addExperienceForm) {
                         data
                     );
 
-                    showToast(
-                        "Gagal",
-                        "Gagal menambahkan Experience.",
-                        "error"
-                    );
+                    let errorMessage = "Gagal menambahkan Experience.";
+
+                        if (data.errors) {
+                            const messages = Object.values(data.errors)
+                                .flat()
+                                .map(error => error.message || error)
+                                .join(" ");
+
+                            if (messages) {
+                                errorMessage = messages;
+                            }
+                        }
+
+                        showToast(
+                            "Gagal",
+                            errorMessage,
+                            "error"
+                        );
 
                     return;
                 }

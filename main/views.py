@@ -192,8 +192,10 @@ def create_experience_ajax(request):
                 "ended_at": experience.ended_at,
                 "star_count": 0,
                 "is_starred": False,
-            }
-        })
+            },
+        },
+            status=201,
+        )
 
     return JsonResponse(
         {
