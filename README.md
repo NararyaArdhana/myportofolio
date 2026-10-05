@@ -56,3 +56,41 @@ Membantu memberikan saran untuk memperbaiki UI, seperti posisi tombol Star, tomb
 Strategi prompting yang digunakan:
 Saya memberikan konteks berupa struktur project, potongan kode, screenshot tampilan atau error, serta hasil pengujian kepada ChatGPT. Saya kemudian meminta bantuan secara bertahap untuk memahami penyebab masalah, menentukan perubahan kode yang diperlukan, dan melakukan pengujian kembali setelah perubahan dilakukan.
 
+### TUGAS 5
+1. Debouncing adalah teknik untuk menunda eksekusi suatu fungsi sampai pengguna berhenti melakukan input selama waktu tertentu. Pada fitur search menggunakan AJAX, debouncing penting agar request ke server tidak dikirim pada setiap karakter yang diketik pengguna. Dengan menggunakan debounce, request hanya dikirim setelah pengguna berhenti mengetik selama beberapa waktu. Hal ini dapat mengurangi jumlah request ke server dan membuat proses pencarian menjadi lebih efisien.
+
+2.await digunakan untuk menunggu hasil dari operasi asynchronous sebelum melanjutkan ke baris kode berikutnya. Pada penggunaan fetch(), await membuat program menunggu sampai request selesai dan mendapatkan response dari server sebelum response tersebut diproses.Jika tidak menggunakan await, hasil dari fetch() masih berupa Promise sehingga kode dapat melanjutkan eksekusi sebelum response dari server tersedia. Hal ini dapat menyebabkan data belum tersedia ketika program mencoba mengakses atau memproses response tersebut.
+
+3.XSS (Cross-Site Scripting) adalah serangan yang memanfaatkan input berbahaya berupa script atau HTML yang kemudian ditampilkan dan dijalankan pada browser pengguna. Data yang ditampilkan melalui JavaScript dan AJAX perlu diperhatikan karena data dari server dapat dimasukkan secara langsung ke dalam HTML menggunakan JavaScript.
+
+#### AI DISCLOSURE
+
+Dalam pengerjaan Tugas 5 saya menggunakan ChatGPT untuk membantu memahami, mengimplementasikan, dan melakukan debugging fitur AJAX, search, modal, toast, serta keamanan XSS.
+
+Bagian yang dibantu oleh AI:
+1. Membantu memahami dan mengimplementasikan pengambilan data Experience menggunakan AJAX dan endpoint JSON.
+2. Membantu memahami dan menerapkan perlindungan terhadap XSS pada data yang ditampilkan melalui JavaScript.
+3. Membantu melakukan debugging berdasarkan error yang muncul saat menjalankan aplikasi.
+4. Membantu melakukan pengecekan dan perbaikan konsistensi tampilan form serta struktur template.
+
+Strategi prompting yang digunakan:
+Saya memberikan konteks berupa struktur project, potongan kode, screenshot tampilan atau error, serta hasil pengujian kepada ChatGPT. Saya kemudian meminta bantuan secara bertahap untuk memahami penyebab masalah, menentukan perubahan kode yang diperlukan, dan melakukan pengujian kembali setelah perubahan dilakukan.
+
+#### Project Setup
+
+Untuk menjalankan project secara lokal:
+
+1. Clone repository dan masuk ke folder project.
+2. Buat dan aktifkan virtual environment.
+3. Install dependency yang diperlukan.
+4. Jalankan migration database 
+5. Jalankan development server menggunakan:
+
+```bash
+py manage.py runserver
+
+buka website melalui
+http://127.0.0.1:8000/
+
+
+
