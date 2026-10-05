@@ -783,3 +783,147 @@ h1, .brand {
     min-height: 120px;
     resize: vertical;
 }
+
+/* Experience Search */
+.experience-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.experience-search input {
+    width: 350px;
+    height: 50px;
+    padding: 0 16px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #fff;
+    font-family: inherit;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.experience-search input:focus {
+    outline: none;
+    border-color: #c9a58c;
+}
+
+.experience-search .btn-search {
+    height: 50px;
+    padding: 0 22px;
+    border: none;
+    border-radius: 10px;
+    background: #f1e1d5;
+    color: #8f4f2f;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* Experience Add / Update Form */
+.experience-form-container {
+    max-width: 900px;
+}
+
+.experience-form {
+    margin-top: 30px;
+    max-width: 700px;
+}
+
+.experience-form p {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.experience-form label {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.experience-form input,
+.experience-form textarea,
+.experience-form select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--paper);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 15px;
+}
+
+.experience-form textarea {
+    min-height: 180px;
+    resize: vertical;
+}
+
+.experience-form input:focus,
+.experience-form textarea:focus,
+.experience-form select:focus {
+    outline: none;
+    border-color: #b97955;
+}
+
+.experience-form .btn-add {
+    margin-top: 5px;
+}
+
+/* Education Add / Update Form */
+.education-form-container {
+    max-width: 900px;
+}
+
+.education-form {
+    margin-top: 30px;
+    max-width: 700px;
+}
+
+.education-form p {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.education-form label {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.education-form input,
+.education-form textarea,
+.education-form select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--paper);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 15px;
+}
+
+.education-form textarea {
+    min-height: 180px;
+    resize: vertical;
+}
+
+.education-form input:focus,
+.education-form textarea:focus,
+.education-form select:focus {
+    outline: none;
+    border-color: #b97955;
+}
+
+.education-form .btn-add {
+    margin-top: 5px;
+}

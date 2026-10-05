@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
 
 {% block meta %}
-<title>Update Education - {{ name }}</title>
+<title>Add Education - {{ name }}</title>
 {% endblock meta %}
 
 {% block content %}
 
 <section class="education">
     <div class="container education-form-container">
-        <p class="section-kicker">Update Education</p>
-        <h1>Update Education</h1>
+        <p class="section-kicker">Add New Education</p>
+        <h1>Add Education</h1>
 
         <form method="POST" class="education-form">
             {% csrf_token %}
@@ -17,7 +17,7 @@
             {{ form.as_p }}
 
             <button type="submit" class="btn btn-add">
-                Update Education
+                Add Education
             </button>
         </form>
     </div>
