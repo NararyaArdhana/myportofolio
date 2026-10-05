@@ -6,19 +6,6 @@
 
 {% block content %}
 
-<section class="experience">
-    <div class="container">
-        <p class="section-kicker">Add New Experience</p>
-        <h1>Add Experience</h1>
-
-        <form method="POST">
-            {% csrf_token %}
-
-            {{ form.as_p }}
-
-            <button type="submit">Add Experience</button>
-        </form>
-    </div>
-</section>
+{% include 'components/experience_form.html' with form_kicker="Add New Experience" form_title="Add Experience" button_text="Add Experience" %}
 
 {% endblock content %}
