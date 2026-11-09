@@ -1,4 +1,3 @@
-from django.db.models import Prefetch
 from rest_framework import status
 from rest_framework.decorators import (
     api_view,
@@ -9,7 +8,7 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework.response import Response
 
 from main.models import Experience
-from main.permissions import IsExperienceOwnerOrReadOnly
+from main.permissions import IsPortfolioOwnerOrEditorOrReadOnly
 from main.serializers import ExperienceSerializer
 
 from django.shortcuts import get_object_or_404
@@ -19,7 +18,7 @@ from rest_framework.permissions import IsAuthenticated
 
 @api_view(["GET", "POST"])
 @authentication_classes([SessionAuthentication])
-@permission_classes([IsExperienceOwnerOrReadOnly])
+@permission_classes([IsPortfolioOwnerOrEditorOrReadOnly])
 def experience_list(request):
     if request.method == "GET":
         experiences = Experience.objects.prefetch_related(
@@ -54,7 +53,7 @@ def experience_list(request):
 
 @api_view(["GET", "PUT", "PATCH", "DELETE"])
 @authentication_classes([SessionAuthentication])
-@permission_classes([IsExperienceOwnerOrReadOnly])
+@permission_classes([IsPortfolioOwnerOrEditorOrReadOnly])
 def experience_detail(request, experience_id):
     experience = get_object_or_404(
         Experience.objects.prefetch_related("starred_by"),
