@@ -3,7 +3,11 @@ from django.urls import reverse
 from django.utils import timezone
 
 from main.models import Experience, Education
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User,Group
+
+from rest_framework.test import APIClient
+from rest_framework import status
+
 
 
 class MainTest(TestCase):
@@ -204,4 +208,140 @@ class EducationTest(TestCase):
         )
         self.assertIsNone(
             self.education.end_year
+        )
+
+
+class ExperienceAPITest(TestCase):
+    def setUp(self):
+        self.experience = Experience.objects.create(
+            title="Test Experience",
+            description="Testing Django REST Framework",
+            category="freelance",
+        )
+
+        self.editor_group = Group.objects.get_or_create(
+            name="Editor"
+        )[0]
+
+        self.visitor = APIClient()
+
+        self.user = User.objects.create_user(
+            username="regular_user",
+            password="testpassword123",
+        )
+
+        self.editor = User.objects.create_user(
+            username="editor_user",
+            password="testpassword123",
+        )
+        self.editor.groups.add(self.editor_group)
+
+        self.owner = User.objects.create_superuser(
+            username="owner",
+            email="owner@example.com",
+            password="testpassword123",
+        )
+
+    def test_visitor_can_get_experiences(self):
+        response = self.visitor.get("/api/v1/experiences/")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_visitor_cannot_create_experience(self):
+        response = self.visitor.post(
+            "/api/v1/experiences/",
+            {
+                "title": "New Experience",
+                "description": "Test",
+                "category": "freelance",
+            },
+        )
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_403_FORBIDDEN,
+        )
+
+    def test_user_can_star_experience(self):
+        self.visitor.force_authenticate(user=self.user)
+
+        response = self.visitor.post(
+            f"/api/v1/experiences/{self.experience.id}/star/"
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(
+            self.experience.starred_by.filter(pk=self.user.pk).exists()
+        )
+
+    def test_editor_can_update_experience(self):
+        self.visitor.force_authenticate(user=self.editor)
+
+        response = self.visitor.patch(
+            f"/api/v1/experiences/{self.experience.id}/",
+            {"title": "Updated by Editor"},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.experience.refresh_from_db()
+        self.assertEqual(self.experience.title, "Updated by Editor")
+
+    def test_editor_cannot_create_experience(self):
+        self.visitor.force_authenticate(user=self.editor)
+
+        response = self.visitor.post(
+            "/api/v1/experiences/",
+            {
+                "title": "New Experience",
+                "description": "Test",
+                "category": "freelance",
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_403_FORBIDDEN,
+        )
+
+    def test_editor_cannot_delete_experience(self):
+        self.visitor.force_authenticate(user=self.editor)
+
+        response = self.visitor.delete(
+            f"/api/v1/experiences/{self.experience.id}/"
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_403_FORBIDDEN,
+        )
+
+    def test_owner_can_create_experience(self):
+        self.visitor.force_authenticate(user=self.owner)
+
+        response = self.visitor.post(
+            "/api/v1/experiences/",
+            {
+                "title": "Owner Experience",
+                "description": "Created by owner",
+                "category": "freelance",
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_201_CREATED,
+        )
+
+    def test_owner_can_delete_experience(self):
+        self.visitor.force_authenticate(user=self.owner)
+
+        response = self.visitor.delete(
+            f"/api/v1/experiences/{self.experience.id}/"
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_204_NO_CONTENT,
         )
