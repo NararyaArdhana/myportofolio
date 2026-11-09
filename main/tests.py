@@ -345,3 +345,26 @@ class ExperienceAPITest(TestCase):
             response.status_code,
             status.HTTP_204_NO_CONTENT,
         )
+
+    def test_post_without_csrf_token_is_rejected(self):
+        csrf_client = APIClient(enforce_csrf_checks=True)
+
+        csrf_client.login(
+            username="owner",
+            password="testpassword123",
+        )
+
+        response = csrf_client.post(
+            "/api/v1/experiences/",
+            {
+                "title": "CSRF Test",
+                "description": "Testing CSRF protection",
+                "category": "freelance",
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 403)
+        self.assertFalse(
+            Experience.objects.filter(title="CSRF Test").exists()
+        )

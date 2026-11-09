@@ -93,4 +93,30 @@ buka website melalui
 http://127.0.0.1:8000/
 
 
+### TUGAS 6
+
+1. REST adalah gaya arsitektur untuk membangun sistem komunikasi antara client dan server melalui HTTP. Mengembalikan JSON saja belum cukup untuk disebut RESTful karena REST juga memiliki prinsip seperti penggunaan resource melalui URL, HTTP methods sesuai fungsinya, stateless communication, dan penggunaan status code HTTP yang tepat. PUT digunakan untuk mengganti keseluruhan representasi resource, sedangkan PATCH digunakan untuk memperbarui sebagian field saja. Contohnya, PUT dapat digunakan ketika seluruh data Experience diperbarui, sedangkan PATCH digunakan ketika hanya title yang ingin diubah.
+
+2. Serializer pada Django REST Framework berfungsi untuk mengubah object atau QuerySet Django menjadi data yang dapat dikirim dalam format JSON, serta melakukan deserialization dan validasi data yang diterima dari client. Dibandingkan membuat JsonResponse secara manual seperti pada Tutorial 5, serializer membuat proses konversi dan validasi data lebih terstruktur, konsisten, dan mudah dikelola. Serializer juga memungkinkan kita menentukan field yang boleh ditampilkan atau diubah, termasuk field yang bersifat read-only.
+
+3. Autentikasi adalah proses untuk memastikan identitas pengguna, misalnya melalui proses login. Sementara itu, otorisasi adalah proses menentukan hak akses pengguna terhadap suatu resource atau tindakan tertentu. Dalam Django REST Framework, permission class digunakan untuk memeriksa hak akses tersebut di sisi server. Pemeriksaan harus dilakukan di server karena tampilan atau tombol yang disembunyikan di template hanya membatasi tampilan antarmuka dan masih dapat dimanipulasi oleh pengguna melalui request langsung ke API.
+
+4. Request yang mengubah data tetap memerlukan CSRF token ketika menggunakan SessionAuthentication karena autentikasi berbasis session menggunakan cookie browser yang dapat dikirim secara otomatis bersama request. Hal ini dapat dimanfaatkan dalam serangan CSRF, yaitu ketika pengguna yang sedang login tanpa sadar mengirim request berbahaya dari website lain. CSRF token membantu memastikan bahwa request perubahan data berasal dari aplikasi yang sah. Pengujian menggunakan force_authenticate tidak cukup untuk membuktikan perlindungan CSRF karena metode tersebut melewati proses autentikasi session normal dan pemeriksaan CSRF. Oleh karena itu, pengujian CSRF perlu menggunakan APIClient dengan enforce_csrf_checks=True dan proses login menggunakan .login().
+
+### AI DISCLOSURE
+
+Dalam pengerjaan Tugas 6 saya menggunakan ChatGPT untuk membantu memahami, mengimplementasikan, dan melakukan debugging Django REST Framework pada bagian Experience di website portfolio.
+
+Bagian yang dibantu oleh AI:
+1. Membantu memahami dan mengimplementasikan ModelSerializer untuk model Experience, termasuk validasi input, field read-only, jumlah star, dan status star pengguna.
+2. Membantu merancang permission class untuk mengatur hak akses Visitor, pengguna biasa, Editor, dan Superuser.
+3. Membantu mengimplementasikan API endpoint untuk menampilkan, mencari, menambah, mengubah, memberi star, dan menghapus data Experience.
+4. Membantu mengintegrasikan API dengan JavaScript menggunakan fetch() agar perubahan data dapat dilakukan tanpa reload halaman.
+5. Membantu menyusun automated test menggunakan APITestCase atau APIClient untuk menguji endpoint dan hak akses setiap role.
+6. Membantu melakukan debugging berdasarkan error dan hasil pengujian yang ditemukan selama pengerjaan.
+
+Strategi prompting yang digunakan:
+
+Saya memberikan konteks berupa struktur project Django, model, serializer, permission, API views, potongan kode, screenshot, serta hasil pengujian kepada ChatGPT. Saya meminta bantuan secara bertahap untuk memahami materi, menentukan perubahan kode yang diperlukan, dan memperbaiki error. Setiap perubahan kemudian saya terapkan dan uji kembali secara mandiri menggunakan Django development server dan automated test.
+
 
