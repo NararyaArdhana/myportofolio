@@ -68,7 +68,7 @@ class MainTest(TestCase):
 
         self.assertContains(
             response,
-            "Belum ada pengalaman yang ditambahkan."
+            "No experience has been added yet"
         )
 
     def test_completed_experience(self):

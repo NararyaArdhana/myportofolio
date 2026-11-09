@@ -309,34 +309,31 @@
                 : "☆";
 
 
-        const starHTML =
-            isAuthenticated
+        
+        const starHTML = isAuthenticated
+            ? `
+                <form
+                    method="POST"
+                    action="/api/v1/experiences/${experience.id}/star/"
+                    class="star-form"
+                    data-api-action="star"
+                >
+                    {% csrf_token %}
 
-                ? `
-                    <form
-                        method="POST"
-                        action="/experience/${experience.id}/star/"
-                        class="star-form"
+                    <button
+                        type="submit"
+                        class="star-button ${starClass}"
                     >
-
-                        {% csrf_token %}
-
-                        <button
-                            type="submit"
-                            class="star-button ${starClass}"
-                        >
-                            ${starIcon}
-                            ${experience.star_count}
-                        </button>
-
-                    </form>
-                `
-
-                : `
-                    <span class="star-count">
-                        ☆ ${experience.star_count}
-                    </span>
-                `;
+                        ${starIcon}
+                        ${experience.star_count}
+                    </button>
+                </form>
+            `
+            : `
+                <span class="star-count">
+                    ☆ ${experience.star_count}
+                </span>
+            `;
 
 
         /*
@@ -362,29 +359,27 @@
          * Delete
          */
 
-        const deleteHTML =
-            isSuperuser
+        
+        const deleteHTML = isSuperuser
+            ? `
+                <form
+                    method="POST"
+                    action="/api/v1/experiences/${experience.id}/"
+                    class="delete-form"
+                    data-api-action="delete"
+                >
+                    {% csrf_token %}
 
-                ? `
-                    <form
-                        method="POST"
-                        action="/experience/${experience.id}/delete/"
-                        class="delete-form"
+                    <button
+                        type="submit"
+                        class="btn btn-delete"
                     >
+                        Delete
+                    </button>
+                </form>
+            `
+            : "";
 
-                        {% csrf_token %}
-
-                        <button
-                            type="submit"
-                            class="btn btn-delete"
-                        >
-                            Delete
-                        </button>
-
-                    </form>
-                `
-
-                : "";
 
 
         /*
@@ -452,7 +447,12 @@
 
             const response =
                 await fetch(
-                    `{% url 'main:get_experience_json' %}?title=${encodeURIComponent(titleQuery)}`
+                    `/api/v1/experiences/?title=${encodeURIComponent(titleQuery)}`,
+                    {
+                        headers: {
+                            "Accept": "application/json"
+                        }
+                    }
                 );
 
 
@@ -666,104 +666,122 @@
     document.getElementById("add-experience-form");
 
 
-if (addExperienceForm) {
 
+if (addExperienceForm) {
     addExperienceForm.addEventListener(
         "submit",
         async function(event) {
-
             event.preventDefault();
 
+            const formData = new FormData(addExperienceForm);
+            const csrfToken = formData.get("csrfmiddlewaretoken");
 
-            const formData =
-                new FormData(addExperienceForm);
-
+            const payload = {
+                title: formData.get("title"),
+                description: formData.get("description"),
+                category: formData.get("category"),
+                thumbnail: formData.get("thumbnail") || null,
+                ended_at: formData.get("ended_at") || null
+            };
 
             try {
+                const response = await fetch(
+                    "/api/v1/experiences/",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Accept": "application/json",
+                            "X-CSRFToken": csrfToken
+                        },
+                        body: JSON.stringify(payload)
+                    }
+                );
 
-                const response =
-                    await fetch(
-                        "{% url 'main:create_experience_ajax' %}",
-                        {
-                            method: "POST",
-                            body: formData,
-                            headers: {
-                                "X-Requested-With": "XMLHttpRequest"
-                            }
-                        }
-                    );
-
-
-                const data =
-                    await response.json();
-
+                const data = await response.json();
 
                 if (!response.ok) {
+                    const errorMessage = Object.values(data)
+                        .flat()
+                        .join(" ");
 
-                    console.error(
-                        "Create Experience Error:",
-                        data
+                    throw new Error(
+                        errorMessage || "Failed to add experience."
                     );
-
-                    let errorMessage = "Gagal menambahkan Experience.";
-
-                        if (data.errors) {
-                            const messages = Object.values(data.errors)
-                                .flat()
-                                .map(error => error.message || error)
-                                .join(" ");
-
-                            if (messages) {
-                                errorMessage = messages;
-                            }
-                        }
-
-                        showToast(
-                            "Gagal",
-                            errorMessage,
-                            "error"
-                        );
-
-                    return;
                 }
 
+                addExperienceForm.reset();
 
-                if (data.success) {
+                addExperienceModal.classList.add("hidden");
 
-                    addExperienceForm.reset();
+                showToast(
+                    "Success",
+                    "Experience successfully added.",
+                    "success"
+                );
 
-                    addExperienceModal
-                        .classList
-                        .add("hidden");
-
-                    showToast(
-                        "Berhasil",
-                        "Experience berhasil ditambahkan.",
-                        "success"
-                    );
-
-                    await loadExperiences();
-                }
+                await loadExperiences();
 
             } catch (error) {
-
-                console.error(
-                    "Create Experience Error:",
-                    error
-                );
+                console.error("Create Experience Error:", error);
 
                 showToast(
                     "Error",
-                    "Terjadi kesalahan saat menambahkan Experience.",
+                    error.message,
                     "error"
                 );
-
             }
-
         }
     );
-
 }
+
+
+const experienceGrid = document.getElementById("experience-grid");
+
+experienceGrid.addEventListener("submit", async function(event) {
+    const form = event.target.closest(
+        'form[data-api-action="star"]'
+    );
+
+    if (!form) return;
+
+    event.preventDefault();
+
+    const button = form.querySelector("button");
+    button.disabled = true;
+
+    try {
+        const csrfToken = form.querySelector(
+            '[name="csrfmiddlewaretoken"]'
+        ).value;
+
+        const response = await fetch(form.action, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": csrfToken,
+                "Accept": "application/json"
+            }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.detail || "Failed to update star.");
+        }
+
+        await loadExperiences();
+
+    } catch (error) {
+        console.error("Star Error:", error);
+
+        showToast("Error", error.message, "error");
+
+    } finally {
+        button.disabled = false;
+    }
+});
+
+
 
 </script>
 
